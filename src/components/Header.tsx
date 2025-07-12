@@ -59,14 +59,18 @@ const Header: React.FC = () => {
   const handleNavigation = (section: { id: string; path: string }) => {
     setIsMenuOpen(false);
     
-    if (location.pathname === '/') {
+    if (location.pathname === '/' || location.pathname.startsWith('/blog/')) {
       // If we're on home page, scroll to section
+      if (location.pathname.startsWith('/blog/')) {
+        // If we're on a blog post, navigate to home first
+        navigate('/');
+      }
       setTimeout(() => {
         const element = document.getElementById(section.id);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 100);
+      }, location.pathname.startsWith('/blog/') ? 300 : 100);
     } else {
       // Navigate to the dedicated page
       navigate(section.path);
@@ -103,9 +107,9 @@ const Header: React.FC = () => {
             onClick={handleLogoClick}
           >
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">SR</span>
+              <span className="text-white font-bold text-lg" aria-hidden="true">SR</span>
             </div>
-            <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
               Sr3k4nth
             </span>
           </motion.div>
@@ -119,18 +123,19 @@ const Header: React.FC = () => {
                   onClick={() => handleNavigation(section)}
                   className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
                     activeSection === section.id
-                      ? 'text-white bg-blue-600 dark:bg-blue-500 shadow-lg'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'text-white bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 shadow-lg'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-800 dark:hover:to-gray-700'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label={`Navigate to ${section.label} section`}
                 >
                   {section.label}
                   {activeSection === section.id && (
                     <>
                     <motion.div
                       layoutId="activeBackground"
-                      className="absolute inset-0 bg-blue-600 dark:bg-blue-500 rounded-lg -z-10"
+                      className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 rounded-lg -z-10"
                       initial={false}
                       transition={{ type: "11", stiffness: 180, damping: 10 }}
                     />
@@ -144,15 +149,17 @@ const Header: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               onClick={handleDownloadResume}
               className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              aria-label="Download resume PDF"
             >
-              <Download size={16} />
+              <Download size={16} aria-hidden="true" />
               <span>Resume</span>
             </motion.button>
             <motion.button
               onClick={toggleTheme}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+              className="p-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-700 dark:text-gray-300 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-300"
+              aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
             >
               <motion.div
                 initial={false}
@@ -170,7 +177,8 @@ const Header: React.FC = () => {
               onClick={toggleTheme}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="p-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-700 dark:text-gray-300"
+              aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
             >
               <motion.div
                 initial={false}
@@ -184,7 +192,8 @@ const Header: React.FC = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="p-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-700 dark:text-gray-300"
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
               <motion.div
                 initial={false}
@@ -220,9 +229,10 @@ const Header: React.FC = () => {
                 onClick={() => handleNavigation(section)}
                 className={`text-left px-4 py-3 rounded-lg transition-all duration-300 w-full ${
                   activeSection === section.id
-                    ? 'text-white bg-blue-600 dark:bg-blue-500 shadow-lg'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    ? 'text-white bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 shadow-lg'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-800 dark:hover:to-gray-700'
                 }`}
+                aria-label={`Navigate to ${section.label} section`}
               >
                 {section.label}
               </motion.button>
@@ -238,8 +248,9 @@ const Header: React.FC = () => {
               whileTap={{ scale: 0.98 }}
               onClick={handleDownloadResume}
               className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg w-full"
+              aria-label="Download resume PDF"
             >
-              <Download size={16} />
+              <Download size={16} aria-hidden="true" />
               <span>Download Resume</span>
             </motion.button>
           </div>

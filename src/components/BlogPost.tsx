@@ -39,14 +39,24 @@ const BlogPost: React.FC = () => {
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            // Navigate back to home and scroll to blog section
+            navigate('/');
+            setTimeout(() => {
+              const element = document.getElementById('blog');
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 100);
+          }}
           className="flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors mb-8 group"
+          aria-label="Back to blog section"
         >
           <motion.div
             whileHover={{ x: -5 }}
             transition={{ duration: 0.2 }}
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5" aria-hidden="true" />
           </motion.div>
           <span>Back to Blog</span>
         </motion.button>
@@ -78,15 +88,15 @@ const BlogPost: React.FC = () => {
             >
               <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
                 <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-1" />
+                  <Calendar className="w-4 h-4 mr-1" aria-hidden="true" />
                   {post.date}
                 </div>
                 <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-1" />
+                  <Clock className="w-4 h-4 mr-1" aria-hidden="true" />
                   {post.readTime}
                 </div>
                 <div className="flex items-center">
-                  <Tag className="w-4 h-4 mr-1" />
+                  <Tag className="w-4 h-4 mr-1" aria-hidden="true" />
                   {post.category}
                 </div>
               </div>
@@ -99,7 +109,7 @@ const BlogPost: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4"
+              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-4"
             >
               {post.title}
             </motion.h1>

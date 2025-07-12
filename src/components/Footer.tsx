@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <h3 className="text-2xl font-bold mb-4">Portfolio</h3>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-4">Portfolio</h3>
             <p className="text-gray-400 mb-4 max-w-md">
               Passionate full-stack engineer crafting exceptional digital experiences
               with modern technologies and best practices.
@@ -44,6 +44,7 @@ const Footer: React.FC = () => {
                 <button 
                   onClick={() => handleNavigation('about')}
                   className="hover:text-white transition-colors"
+                  aria-label="Navigate to about section"
                 >
                   About
                 </button>
@@ -52,6 +53,7 @@ const Footer: React.FC = () => {
                 <button 
                   onClick={() => handleNavigation('projects')}
                   className="hover:text-white transition-colors"
+                  aria-label="Navigate to projects section"
                 >
                   Projects
                 </button>
@@ -60,6 +62,7 @@ const Footer: React.FC = () => {
                 <button 
                   onClick={() => handleNavigation('blog')}
                   className="hover:text-white transition-colors"
+                  aria-label="Navigate to blog section"
                 >
                   Blog
                 </button>
@@ -68,6 +71,7 @@ const Footer: React.FC = () => {
                 <button 
                   onClick={() => handleNavigation('contact')}
                   className="hover:text-white transition-colors"
+                  aria-label="Navigate to contact section"
                 >
                   Contact
                 </button>
@@ -79,22 +83,22 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">Connect</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <a href="mailto:srikanddth.tnrs@gmail.com" className="hover:text-white transition-colors">
+                <a href="mailto:srikanddth.tnrs@gmail.com" className="hover:text-white transition-colors" aria-label="Send email">
                   Email
                 </a>
               </li>
               <li>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Visit LinkedIn profile">
                   LinkedIn
                 </a>
               </li>
               <li>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Visit GitHub profile">
                   GitHub
                 </a>
               </li>
               <li>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Visit Twitter profile">
                   Twitter
                 </a>
               </li>
@@ -109,9 +113,10 @@ const Footer: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             onClick={scrollToTop}
-            className="mt-4 md:mt-0 p-2 bg-blue-600 rounded-full hover:bg-blue-700 transition-colors"
+            className="mt-4 md:mt-0 p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg"
+            aria-label="Scroll to top of page"
           >
-            <ArrowUp className="w-4 h-4" />
+            <ArrowUp className="w-4 h-4" aria-hidden="true" />
           </motion.button>
         </div>
       </div>

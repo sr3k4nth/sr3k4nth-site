@@ -38,7 +38,7 @@ const About: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-6">
             About Me
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
@@ -56,6 +56,7 @@ const About: React.FC = () => {
             <div className="relative">
               <div className="w-full h-96 rounded-2xl overflow-hidden">
                 <img
+                  role="img"
                   alt="Developer working on code"
                   src="https://epnovate.com/wp-content/uploads/2020/08/5-1-898x1024.png"
                   className="w-full h-full object-scale-down"
@@ -93,7 +94,7 @@ const About: React.FC = () => {
               {personalInfo.technologies.map((tech) => (
                 <span
                   key={tech}
-                  className="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium"
+                  className="px-4 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium"
                 >
                   {tech}
                 </span>
@@ -116,14 +117,14 @@ const About: React.FC = () => {
                 key={index}
                 variants={itemVariants}
                 whileHover={{ scale: 1.05 }}
-                className="p-6 bg-gray-50 dark:bg-gray-700 rounded-xl hover:shadow-lg transition-shadow"
+                className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-xl hover:shadow-lg transition-all duration-300"
               >
-                <div className="text-blue-600 dark:text-blue-400 mb-4">
+                <div className="text-blue-600 dark:text-blue-400 mb-4" aria-hidden="true">
                   <IconComponent className="w-8 h-8" />
                 </div>
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {skill.title}
-                </h4>
+                </h3>
                 <p className="text-gray-600 dark:text-gray-300">
                   {skill.description}
                 </p>
