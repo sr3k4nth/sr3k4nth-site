@@ -69,19 +69,19 @@ const Blog: React.FC = () => {
   };
 
   return (
-    <section id="blog" className="py-20 bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-900 dark:to-indigo-900">
+    <section id="blog" className="py-16 bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-900 dark:to-indigo-900">
       <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-4">
             Latest Blog Posts
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Sharing insights, tutorials, and best practices from my journey as a full-stack developer.
           </p>
         </motion.div>
@@ -92,7 +92,7 @@ const Blog: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
+          className="flex flex-wrap justify-center gap-3 mb-10"
           role="tablist"
           aria-label="Blog post categories"
         >
@@ -102,7 +102,7 @@ const Blog: React.FC = () => {
               onClick={() => setSelectedCategory(category)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full font-medium transition-all duration-300 text-sm ${
                 selectedCategory === category
                   ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-105'
                   : 'bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-600 dark:hover:to-gray-500 hover:shadow-md'
@@ -127,9 +127,9 @@ const Blog: React.FC = () => {
 
         {filteredPosts.length > 0 ? (
           <>
-            {/* Featured Post Carousel */}
-            <div className="relative max-w-5xl mx-auto mb-16">
-              <div className="relative overflow-hidden rounded-2xl">
+            {/* Compact Featured Post Carousel */}
+            <div className="relative max-w-4xl mx-auto mb-10">
+              <div className="relative overflow-hidden rounded-xl shadow-2xl">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`${selectedCategory}-${currentIndex}`}
@@ -140,7 +140,7 @@ const Blog: React.FC = () => {
                     className="w-full"
                   >
                     <article 
-                      className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl cursor-pointer group"
+                      className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-xl cursor-pointer group"
                       onClick={() => handlePostClick(filteredPosts[currentIndex].slug)}
                     >
                       <div className="grid lg:grid-cols-2 gap-0">
@@ -149,42 +149,42 @@ const Blog: React.FC = () => {
                           <img
                             src={filteredPosts[currentIndex].image}
                             alt={filteredPosts[currentIndex].title}
-                            className="w-full h-64 lg:h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-48 lg:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"
                           />
-                          <div className="absolute top-4 left-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-lg">
+                          <div className="absolute top-3 left-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-lg">
                             <Tag className="w-3 h-3 mr-1" aria-hidden="true" />
                             {filteredPosts[currentIndex].category}
                           </div>
                         </div>
                         
                         {/* Post Content */}
-                        <div className="p-8 flex flex-col justify-center">
-                          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        <div className="p-6 flex flex-col justify-center">
+                          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3">
                             <div className="flex items-center">
-                              <Calendar className="w-4 h-4 mr-1" aria-hidden="true" />
+                              <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />
                               {filteredPosts[currentIndex].date}
                             </div>
                             <div className="flex items-center">
-                              <Clock className="w-4 h-4 mr-1" aria-hidden="true" />
+                              <Clock className="w-3 h-3 mr-1" aria-hidden="true" />
                               {filteredPosts[currentIndex].readTime}
                             </div>
                           </div>
                           
-                          <h3 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-4 group-hover:from-blue-600 group-hover:to-indigo-600 dark:group-hover:from-blue-400 dark:group-hover:to-indigo-400 transition-all duration-300">
+                          <h3 className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3 group-hover:from-blue-600 group-hover:to-indigo-600 dark:group-hover:from-blue-400 dark:group-hover:to-indigo-400 transition-all duration-300 line-clamp-2">
                             {filteredPosts[currentIndex].title}
                           </h3>
                           
-                          <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg leading-relaxed">
+                          <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed line-clamp-3">
                             {filteredPosts[currentIndex].excerpt}
                           </p>
                           
                           <motion.div
                             whileHover={{ x: 5 }}
-                            className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium text-lg"
+                            className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium text-sm"
                           >
                             <span className="mr-2">Read more</span>
-                            <ArrowRight className="w-5 h-5" aria-hidden="true" />
+                            <ArrowRight className="w-4 h-4" aria-hidden="true" />
                           </motion.div>
                         </div>
                       </div>
@@ -198,26 +198,26 @@ const Blog: React.FC = () => {
                 <>
                   <button
                     onClick={prevPost}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
                     aria-label="Previous blog post"
                   >
-                    <ChevronLeft className="w-6 h-6 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                    <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                   </button>
                   <button
                     onClick={nextPost}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
                     aria-label="Next blog post"
                   >
-                    <ChevronRight className="w-6 h-6 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                    <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                   </button>
 
                   {/* Dots Indicator */}
-                  <div className="flex justify-center space-x-3 mt-8">
+                  <div className="flex justify-center space-x-2 mt-6">
                     {filteredPosts.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => goToPost(index)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
                           index === currentIndex
                             ? 'bg-gradient-to-r from-blue-600 to-indigo-600 scale-125'
                             : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
@@ -230,13 +230,13 @@ const Blog: React.FC = () => {
               )}
             </div>
 
-            {/* All Posts Grid */}
+            {/* Compact Posts Grid */}
             <motion.div
               key={selectedCategory}
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
             >
               {filteredPosts.map((post, index) => (
                 <motion.article
@@ -245,46 +245,46 @@ const Blog: React.FC = () => {
                   whileHover={{ scale: 1.02, y: -5 }}
                   transition={{ duration: 0.3 }}
                   onClick={() => handlePostClick(post.slug)}
-                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+                  className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
                 >
                   <div className="relative overflow-hidden">
                     <img
                       src={post.image}
                       alt={post.title}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
-                    <div className="absolute top-4 left-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-md">
+                    <div className="absolute top-2 left-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-md">
                       <Tag className="w-3 h-3 mr-1" aria-hidden="true" />
                       {post.category}
                     </div>
                   </div>
                   
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                    <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2 text-sm">
                       {post.excerpt}
                     </p>
                     
-                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3">
                       <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" aria-hidden="true" />
+                        <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />
                         {post.date}
                       </div>
                       <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" aria-hidden="true" />
+                        <Clock className="w-3 h-3 mr-1" aria-hidden="true" />
                         {post.readTime}
                       </div>
                     </div>
                     
                     <motion.div
                       whileHover={{ x: 5 }}
-                      className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium"
+                      className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium text-sm"
                     >
                       <span className="mr-2">Read more</span>
-                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                      <ArrowRight className="w-3 h-3" aria-hidden="true" />
                     </motion.div>
                   </div>
                 </motion.article>
@@ -307,9 +307,9 @@ const Blog: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-center mt-8"
+          className="text-center mt-6"
         >
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             Showing {filteredPosts.length} of {blogPosts.length} posts
             {selectedCategory !== 'All' && ` in "${selectedCategory}"`}
           </p>

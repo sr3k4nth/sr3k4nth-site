@@ -21,7 +21,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-900">
+    <section id="contact" className="py-16 bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900">
       <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -30,10 +30,10 @@ const Contact: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-6">
             Get In Touch
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
             Ready to collaborate on your next project? Let's discuss how we can bring your ideas to life.
           </p>
         </motion.div>
@@ -131,6 +131,7 @@ const Contact: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8 shadow-lg"
+            className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8 shadow-2xl border border-gray-100 dark:border-gray-700"
           >
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>

@@ -47,7 +47,7 @@ const BlogPost: React.FC = () => {
               if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
               }
-            }, 100);
+            }, 300);
           }}
           className="flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors mb-8 group"
           aria-label="Back to blog section"

@@ -4,25 +4,26 @@
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+  @apply bg-gray-100/50 dark:bg-gray-800/50;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+  @apply bg-gradient-to-b from-blue-400 to-indigo-500 dark:from-blue-600 dark:to-indigo-700 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-500 dark:bg-gray-500;
+  @apply from-blue-500 to-indigo-600 dark:from-blue-500 dark:to-indigo-600;
 }
 
 /* Focus styles for accessibility */
 *:focus {
-  outline: 2px solid #3b82f6;
+  outline: 3px solid #3b82f6;
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Skip to main content link for screen readers */
@@ -79,6 +80,32 @@ html, body {
 /* Improved button and interactive element styles */
 button, a {
   transition: all 0.3s ease;
+}
+
+/* Enhanced gradient backgrounds */
+.gradient-bg {
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.1) 0%, 
+    rgba(99, 102, 241, 0.1) 50%, 
+    rgba(139, 92, 246, 0.1) 100%);
+}
+
+.dark .gradient-bg {
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.05) 0%, 
+    rgba(99, 102, 241, 0.05) 50%, 
+    rgba(139, 92, 246, 0.05) 100%);
+}
+
+/* Enhanced shadows */
+.shadow-elegant {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dark .shadow-elegant {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 /* Reduced motion for users who prefer it */
