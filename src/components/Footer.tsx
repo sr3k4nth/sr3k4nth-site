@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">Connect</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <a href="mailto:srikanth.tnrs@gmail.com" className="hover:text-white transition-colors">
+                <a href="mailto:srikanddth.tnrs@gmail.com" className="hover:text-white transition-colors">
                   Email
                 </a>
               </li>

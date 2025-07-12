@@ -79,7 +79,7 @@ const About: React.FC = () => {
             ⚡  I build apps that work—fast, reliable, and scalable
             </h3> */}
             <p className="text-lg text-gray-600 dark:text-gray-300">
-            Hi, I'm <b>Srikanth 👋 </b>— a passionate <b>Senior Software Engineer</b> with <b>9 years of experience</b> crafting scalable, high-performance 🚀, and user-focused web applications.🧠💻
+            Hi, I'm <b>Srikanth1 👋 </b>— a passionate <b>Senior Software Engineer</b> with <b>9 years of experience</b> crafting scalable, high-performance 🚀, and user-focused web applications.🧠💻
             </p>
             <p className="text-lg text-gray-600 dark:text-gray-300">
             My core expertise lies in the JavaScript ecosystem, especially React.js, Node.js, and modern web architectures. I’ve worked across dynamic industries like Fintech, E-Commerce, and Healthcare, delivering robust solutions that balance performance, usability, and maintainability.
