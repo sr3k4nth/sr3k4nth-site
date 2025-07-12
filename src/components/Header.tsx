@@ -103,7 +103,7 @@ const Header: React.FC = () => {
                     alt={'dd'}
                     // className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   /> */}
-            Sr3k4nth
+            Sr3k4nth-changed
           </motion.div>
 
           {/* Desktop Navigation */}
