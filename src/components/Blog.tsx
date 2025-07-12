@@ -33,7 +33,7 @@ const Blog: React.FC = () => {
 
   return (
     <section id="blog" className="py-20 bg-white dark:bg-gray-800">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -44,7 +44,7 @@ const Blog: React.FC = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Latest Blog Posts
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
             Sharing insights, tutorials, and best practices from my journey as a full-stack developer.
           </p>
         </motion.div>
@@ -89,7 +89,7 @@ const Blog: React.FC = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post, index) => (

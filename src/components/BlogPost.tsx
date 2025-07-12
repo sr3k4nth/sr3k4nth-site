@@ -34,7 +34,7 @@ const BlogPost: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 pt-20">
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-4 sm:px-6 py-12">
         {/* Back Button */}
         <motion.button
           initial={{ opacity: 0, x: -20 }}

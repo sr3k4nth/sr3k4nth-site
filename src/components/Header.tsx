@@ -57,20 +57,24 @@ const Header: React.FC = () => {
   }, [location.pathname]);
 
   const handleNavigation = (section: { id: string; path: string }) => {
-    if (location.pathname === '/' && document.getElementById(section.id)) {
-      // If we're on home page and section exists, scroll to it
-      const element = document.getElementById(section.id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+    setIsMenuOpen(false);
+    
+    if (location.pathname === '/') {
+      // If we're on home page, scroll to section
+      setTimeout(() => {
+        const element = document.getElementById(section.id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     } else {
       // Navigate to the dedicated page
       navigate(section.path);
     }
-    setIsMenuOpen(false);
   };
 
   const handleLogoClick = () => {
+    setIsMenuOpen(false);
     navigate('/');
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -91,19 +95,19 @@ const Header: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700"
     >
-      <nav className="container mx-auto px-6 py-4">
+      <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="text-2xl font-bold text-gray-900 dark:text-white cursor-pointer"
+            className="flex items-center space-x-3 cursor-pointer"
             onClick={handleLogoClick}
           >
-               {/* <img
-                    src={'/home/lenovo/Downloads/png-clipart-github-computer-software-programmer-asus-rog-zephyrus-gx501-software-developer-github-doc-cartoon.png'}
-                    alt={'dd'}
-                    // className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  /> */}
-            Sr3k4nth-changed
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-lg">SR</span>
+            </div>
+            <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+              Sr3k4nth
+            </span>
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -201,9 +205,9 @@ const Header: React.FC = () => {
             opacity: isMenuOpen ? 1 : 0
           }}
           transition={{ duration: 0.3 }}
-          className="md:hidden overflow-hidden"
+          className="md:hidden overflow-hidden bg-white dark:bg-gray-900"
         >
-          <div className="flex flex-col space-y-4 pt-4 pb-4 border-t border-gray-200 dark:border-gray-700 mt-4">
+          <div className="flex flex-col space-y-2 pt-4 pb-4 border-t border-gray-200 dark:border-gray-700 mt-4">
             {sections.map((section, index) => (
               <motion.button
                 key={section.id}
@@ -214,7 +218,7 @@ const Header: React.FC = () => {
                 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => handleNavigation(section)}
-                className={`text-left px-4 py-3 rounded-lg transition-all duration-300 ${
+                className={`text-left px-4 py-3 rounded-lg transition-all duration-300 w-full ${
                   activeSection === section.id
                     ? 'text-white bg-blue-600 dark:bg-blue-500 shadow-lg'
                     : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -233,7 +237,7 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleDownloadResume}
-              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg w-fit"
+              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg w-full"
             >
               <Download size={16} />
               <span>Download Resume</span>
