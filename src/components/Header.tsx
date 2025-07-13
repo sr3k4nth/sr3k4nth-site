@@ -29,10 +29,8 @@ const Header: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Set active section based on current path
     const currentPath = location.pathname;
     if (currentPath === '/') {
-      // On home page, track scroll position
       const handleScroll = () => {
         const scrollPosition = window.scrollY + 100;
         
@@ -49,18 +47,16 @@ const Header: React.FC = () => {
           }
         }
         
-        // If we're at the top, no section is active
         if (window.scrollY < 100) {
           setActiveSection('');
         }
       };
 
       window.addEventListener('scroll', handleScroll);
-      handleScroll(); // Check initial position
+      handleScroll();
       
       return () => window.removeEventListener('scroll', handleScroll);
     } else {
-      // Set active section based on current route
       const activeRoute = sections.find(section => currentPath.startsWith(section.path));
       setActiveSection(activeRoute?.id || '');
     }
@@ -70,9 +66,7 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
     
     if (location.pathname === '/' || location.pathname.startsWith('/blog/')) {
-      // If we're on home page, scroll to section
       if (location.pathname.startsWith('/blog/')) {
-        // If we're on a blog post, navigate to home first
         navigate('/');
       }
       setTimeout(() => {
@@ -82,7 +76,6 @@ const Header: React.FC = () => {
         }
       }, location.pathname.startsWith('/blog/') ? 300 : 100);
     } else {
-      // Navigate to the dedicated page
       navigate(section.path);
     }
   };
@@ -109,7 +102,7 @@ const Header: React.FC = () => {
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50 shadow-lg' 
+          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg' 
           : 'bg-transparent'
       }`}
     >
@@ -120,15 +113,23 @@ const Header: React.FC = () => {
             className="flex items-center space-x-3 cursor-pointer"
             onClick={handleLogoClick}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg" aria-hidden="true">SR</span>
+            {/* Creative TS Logo */}
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl shadow-lg transform rotate-3"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-xl shadow-lg transform -rotate-3"></div>
+              <div className="relative w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-xl">
+                <span className="text-white font-bold text-lg tracking-tight" style={{ fontFamily: 'monospace' }}>
+                  TS
+                </span>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full shadow-md"></div>
+              </div>
             </div>
             <span className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${
               isScrolled 
-                ? 'bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent'
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'
                 : 'text-white dark:text-white'
             }`}>
-              Sr3k4nth
+              TechSrikanth
             </span>
           </motion.div>
 
@@ -140,9 +141,9 @@ const Header: React.FC = () => {
                   onClick={() => handleNavigation(section)}
                   className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
                     activeSection === section.id
-                      ? 'text-white bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 shadow-lg'
+                      ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg'
                       : isScrolled
-                        ? 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-800 dark:hover:to-gray-700'
+                        ? 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                         : 'text-white/90 hover:text-white hover:bg-white/10'
                   }`}
                   whileHover={{ scale: 1.05 }}
@@ -157,7 +158,7 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleDownloadResume}
-              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
               aria-label="Download resume PDF"
             >
               <Download size={16} aria-hidden="true" />
@@ -169,7 +170,7 @@ const Header: React.FC = () => {
               whileTap={{ scale: 0.9 }}
               className={`p-2 rounded-lg transition-all duration-300 ${
                 isScrolled
-                  ? 'bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-700 dark:text-gray-300 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-700 dark:hover:to-gray-600'
+                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                   : 'bg-white/10 text-white hover:bg-white/20'
               }`}
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
@@ -192,7 +193,7 @@ const Header: React.FC = () => {
               whileTap={{ scale: 0.9 }}
               className={`p-2 rounded-lg transition-all duration-300 ${
                 isScrolled
-                  ? 'bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-700 dark:text-gray-300'
+                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                   : 'bg-white/10 text-white'
               }`}
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
@@ -211,7 +212,7 @@ const Header: React.FC = () => {
               whileTap={{ scale: 0.9 }}
               className={`p-2 rounded-lg transition-all duration-300 ${
                 isScrolled
-                  ? 'bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 text-gray-700 dark:text-gray-300'
+                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                   : 'bg-white/10 text-white'
               }`}
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
@@ -237,7 +238,7 @@ const Header: React.FC = () => {
           transition={{ duration: 0.3 }}
           className="md:hidden overflow-hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-lg mt-4"
         >
-          <div className="flex flex-col space-y-2 pt-4 pb-4 border-t border-gray-200/50 dark:border-gray-700/50">
+          <div className="flex flex-col space-y-2 pt-4 pb-4">
             {sections.map((section, index) => (
               <motion.button
                 key={section.id}
@@ -250,8 +251,8 @@ const Header: React.FC = () => {
                 onClick={() => handleNavigation(section)}
                 className={`text-left px-4 py-3 rounded-lg transition-all duration-300 w-full ${
                   activeSection === section.id
-                    ? 'text-white bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 shadow-lg'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-800 dark:hover:to-gray-700'
+                    ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
                 aria-label={`Navigate to ${section.label} section`}
               >
@@ -268,7 +269,7 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleDownloadResume}
-              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg w-full"
+              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg w-full"
               aria-label="Download resume PDF"
             >
               <Download size={16} aria-hidden="true" />

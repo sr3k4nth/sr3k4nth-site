@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Download, Github, Linkedin, Mail, ArrowDown } from 'lucide-react';
-import TypeWriter from './TypeWriter';
+import { TypeAnimation } from 'react-type-animation';
 import { personalInfo } from '../data/personalInfo';
 
 const Hero: React.FC = () => {
@@ -30,11 +30,6 @@ const Hero: React.FC = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  const typewriterTexts = [
-    `I'm ${personalInfo.name}`,
-    `I'm ${personalInfo.title}`
-  ];
 
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900">
@@ -77,11 +72,22 @@ const Hero: React.FC = () => {
             </motion.div>
 
             <div className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 min-h-[1.2em]">
-              <TypeWriter 
-                texts={typewriterTexts}
-                speed={200}
-                deleteSpeed={50}
-                delayBetweenTexts={3000}
+              <TypeAnimation
+                sequence={[
+                  `I'm ${personalInfo.name}`,
+                  2000,
+                  `I'm ${personalInfo.title}`,
+                  2000,
+                  'I build amazing web apps',
+                  2000,
+                  'I create digital experiences',
+                  2000,
+                ]}
+                wrapper="span"
+                speed={50}
+                repeat={Infinity}
+                cursor={true}
+                style={{ display: 'inline-block' }}
               />
             </div>
             
@@ -121,7 +127,11 @@ const Hero: React.FC = () => {
               whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)" }}
               whileTap={{ scale: 0.95 }}
               onClick={handleContactClick}
-              className="flex items-center space-x-3 border-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 px-8 py-4 rounded-full hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-white transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl"
+              className="flex items-center space-x-3 bg-transparent text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-white transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl"
+              style={{
+                background: 'linear-gradient(white, white) padding-box, linear-gradient(45deg, #3b82f6, #6366f1) border-box',
+                border: '2px solid transparent'
+              }}
               aria-label="Navigate to contact section"
             >
               <Mail size={20} aria-hidden="true" />

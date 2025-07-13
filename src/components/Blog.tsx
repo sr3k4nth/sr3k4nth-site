@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, Tag, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { blogPosts, blogCategories } from '../data/blogPosts';
@@ -8,22 +8,40 @@ const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [itemsPerView, setItemsPerView] = useState(3);
   const navigate = useNavigate();
 
   const filteredPosts = selectedCategory === 'All' 
     ? blogPosts 
     : blogPosts.filter(post => post.category === selectedCategory);
 
-  // Auto-play carousel
+  // Responsive items per view
   useEffect(() => {
-    if (!isAutoPlaying || filteredPosts.length <= 1) return;
+    const updateItemsPerView = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerView(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(3);
+      }
+    };
+
+    updateItemsPerView();
+    window.addEventListener('resize', updateItemsPerView);
+    return () => window.removeEventListener('resize', updateItemsPerView);
+  }, []);
+
+  // Auto-play infinite carousel
+  useEffect(() => {
+    if (!isAutoPlaying || filteredPosts.length <= itemsPerView) return;
     
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % filteredPosts.length);
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, filteredPosts.length]);
+  }, [isAutoPlaying, filteredPosts.length, itemsPerView]);
 
   // Reset current index when category changes
   useEffect(() => {
@@ -32,7 +50,6 @@ const Blog: React.FC = () => {
 
   const handlePostClick = (slug: string) => {
     navigate(`/blog/${slug}`);
-    // Scroll to top when navigating to blog post
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
@@ -41,16 +58,24 @@ const Blog: React.FC = () => {
   const nextPost = () => {
     setCurrentIndex((prev) => (prev + 1) % filteredPosts.length);
     setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 5000);
   };
 
   const prevPost = () => {
     setCurrentIndex((prev) => (prev - 1 + filteredPosts.length) % filteredPosts.length);
     setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 5000);
   };
 
-  const goToPost = (index: number) => {
-    setCurrentIndex(index);
-    setIsAutoPlaying(false);
+  const getVisiblePosts = () => {
+    if (filteredPosts.length <= itemsPerView) return filteredPosts;
+    
+    const visiblePosts = [];
+    for (let i = 0; i < itemsPerView; i++) {
+      const index = (currentIndex + i) % filteredPosts.length;
+      visiblePosts.push({ ...filteredPosts[index], displayIndex: index });
+    }
+    return visiblePosts;
   };
 
   const containerVariants = {
@@ -69,14 +94,14 @@ const Blog: React.FC = () => {
   };
 
   return (
-    <section id="blog" className="py-16 bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-900 dark:to-indigo-900">
+    <section id="blog" className="py-12 bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-gray-900 dark:to-indigo-900">
       <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-4">
             Latest Blog Posts
@@ -92,7 +117,7 @@ const Blog: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex flex-wrap justify-center gap-3 mb-10"
+          className="flex flex-wrap justify-center gap-3 mb-8"
           role="tablist"
           aria-label="Blog post categories"
         >
@@ -104,8 +129,8 @@ const Blog: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               className={`px-4 py-2 rounded-full font-medium transition-all duration-300 text-sm ${
                 selectedCategory === category
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-105'
-                  : 'bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-600 dark:hover:to-gray-500 hover:shadow-md'
+                  ? 'text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg transform scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:shadow-md'
               }`}
               role="tab"
               aria-selected={selectedCategory === category}
@@ -127,56 +152,62 @@ const Blog: React.FC = () => {
 
         {filteredPosts.length > 0 ? (
           <>
-            {/* Compact Featured Post Carousel */}
-            <div className="relative max-w-4xl mx-auto mb-10">
-              <div className="relative overflow-hidden rounded-xl shadow-2xl">
-                <AnimatePresence mode="wait">
+            {/* Infinite Carousel */}
+            {filteredPosts.length > itemsPerView && (
+              <div className="relative max-w-7xl mx-auto mb-8">
+                <div className="overflow-hidden">
                   <motion.div
                     key={`${selectedCategory}-${currentIndex}`}
-                    initial={{ opacity: 0, x: 300 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -300 }}
+                    initial={{ x: 300, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="w-full"
+                    className={`grid gap-6 ${
+                      itemsPerView === 1 ? 'grid-cols-1' : 
+                      itemsPerView === 2 ? 'grid-cols-2' : 
+                      'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                    }`}
                   >
-                    <article 
-                      className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-xl cursor-pointer group"
-                      onClick={() => handlePostClick(filteredPosts[currentIndex].slug)}
-                    >
-                      <div className="grid lg:grid-cols-2 gap-0">
-                        {/* Post Image */}
+                    {getVisiblePosts().map((post, index) => (
+                      <motion.article
+                        key={`${selectedCategory}-${post.displayIndex || index}-${index}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+                        onClick={() => handlePostClick(post.slug)}
+                        whileHover={{ scale: 1.02, y: -5 }}
+                      >
                         <div className="relative overflow-hidden">
                           <img
-                            src={filteredPosts[currentIndex].image}
-                            alt={filteredPosts[currentIndex].title}
-                            className="w-full h-48 lg:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                            src={post.image}
+                            alt={post.title}
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"
                           />
                           <div className="absolute top-3 left-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-lg">
                             <Tag className="w-3 h-3 mr-1" aria-hidden="true" />
-                            {filteredPosts[currentIndex].category}
+                            {post.category}
                           </div>
                         </div>
                         
-                        {/* Post Content */}
-                        <div className="p-6 flex flex-col justify-center">
+                        <div className="p-6">
                           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3">
                             <div className="flex items-center">
                               <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />
-                              {filteredPosts[currentIndex].date}
+                              {post.date}
                             </div>
                             <div className="flex items-center">
                               <Clock className="w-3 h-3 mr-1" aria-hidden="true" />
-                              {filteredPosts[currentIndex].readTime}
+                              {post.readTime}
                             </div>
                           </div>
                           
-                          <h3 className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3 group-hover:from-blue-600 group-hover:to-indigo-600 dark:group-hover:from-blue-400 dark:group-hover:to-indigo-400 transition-all duration-300 line-clamp-2">
-                            {filteredPosts[currentIndex].title}
+                          <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3 group-hover:from-blue-600 group-hover:to-indigo-600 dark:group-hover:from-blue-400 dark:group-hover:to-indigo-400 transition-all duration-300 line-clamp-2">
+                            {post.title}
                           </h3>
                           
                           <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed line-clamp-3">
-                            {filteredPosts[currentIndex].excerpt}
+                            {post.excerpt}
                           </p>
                           
                           <motion.div
@@ -187,56 +218,56 @@ const Blog: React.FC = () => {
                             <ArrowRight className="w-4 h-4" aria-hidden="true" />
                           </motion.div>
                         </div>
-                      </div>
-                    </article>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Navigation Arrows */}
-              {filteredPosts.length > 1 && (
-                <>
-                  <button
-                    onClick={prevPost}
-                    className="absolute left-2 top-1/2 transform -translate-y-1/2 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
-                    aria-label="Previous blog post"
-                  >
-                    <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                  </button>
-                  <button
-                    onClick={nextPost}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
-                    aria-label="Next blog post"
-                  >
-                    <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                  </button>
-
-                  {/* Dots Indicator */}
-                  <div className="flex justify-center space-x-2 mt-6">
-                    {filteredPosts.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => goToPost(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                          index === currentIndex
-                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 scale-125'
-                            : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
-                        }`}
-                        aria-label={`Go to blog post ${index + 1}`}
-                      />
+                      </motion.article>
                     ))}
-                  </div>
-                </>
-              )}
-            </div>
+                  </motion.div>
+                </div>
 
-            {/* Compact Posts Grid */}
+                {/* Navigation Arrows */}
+                <button
+                  onClick={prevPost}
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
+                  aria-label="Previous blog posts"
+                >
+                  <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                </button>
+                <button
+                  onClick={nextPost}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
+                  aria-label="Next blog posts"
+                >
+                  <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                </button>
+
+                {/* Dots Indicator */}
+                <div className="flex justify-center space-x-2 mt-6">
+                  {filteredPosts.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setCurrentIndex(index);
+                        setIsAutoPlaying(false);
+                        setTimeout(() => setIsAutoPlaying(true), 5000);
+                      }}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        index === currentIndex
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 scale-125'
+                          : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                      }`}
+                      aria-label={`Go to blog post ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* All Posts Grid */}
             <motion.div
               key={selectedCategory}
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {filteredPosts.map((post, index) => (
                 <motion.article

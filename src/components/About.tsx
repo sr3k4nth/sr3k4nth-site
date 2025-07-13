@@ -94,7 +94,7 @@ const About: React.FC = () => {
               {personalInfo.technologies.map((tech) => (
                 <span
                   key={tech}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium"
+                  className="px-4 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium shadow-sm"
                 >
                   {tech}
                 </span>
