@@ -8,6 +8,7 @@ const Header: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,10 +20,17 @@ const Header: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Set active section based on current path
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
     const currentPath = location.pathname;
     if (currentPath === '/') {
-      // On home page, track scroll position
       const handleScroll = () => {
         const scrollPosition = window.scrollY + 100;
         
@@ -39,38 +47,41 @@ const Header: React.FC = () => {
           }
         }
         
-        // If we're at the top, no section is active
         if (window.scrollY < 100) {
           setActiveSection('');
         }
       };
 
       window.addEventListener('scroll', handleScroll);
-      handleScroll(); // Check initial position
+      handleScroll();
       
       return () => window.removeEventListener('scroll', handleScroll);
     } else {
-      // Set active section based on current route
       const activeRoute = sections.find(section => currentPath.startsWith(section.path));
       setActiveSection(activeRoute?.id || '');
     }
   }, [location.pathname]);
 
   const handleNavigation = (section: { id: string; path: string }) => {
-    if (location.pathname === '/' && document.getElementById(section.id)) {
-      // If we're on home page and section exists, scroll to it
-      const element = document.getElementById(section.id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+    setIsMenuOpen(false);
+    
+    if (location.pathname === '/' || location.pathname.startsWith('/blog/')) {
+      if (location.pathname.startsWith('/blog/')) {
+        navigate('/');
       }
+      setTimeout(() => {
+        const element = document.getElementById(section.id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, location.pathname.startsWith('/blog/') ? 300 : 100);
     } else {
-      // Navigate to the dedicated page
       navigate(section.path);
     }
-    setIsMenuOpen(false);
   };
 
   const handleLogoClick = () => {
+    setIsMenuOpen(false);
     navigate('/');
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -89,49 +100,53 @@ const Header: React.FC = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg'
+      }`}
     >
-      <nav className="container mx-auto px-6 py-4">
+      <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="text-2xl font-bold text-gray-900 dark:text-white cursor-pointer"
+            className="flex items-center space-x-3 cursor-pointer"
             onClick={handleLogoClick}
           >
-               {/* <img
-                    src={'/home/lenovo/Downloads/png-clipart-github-computer-software-programmer-asus-rog-zephyrus-gx501-software-developer-github-doc-cartoon.png'}
-                    alt={'dd'}
-                    // className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  /> */}
-            Sr3k4nth-changed
+            {/* Creative TS Logo */}
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl shadow-lg transform rotate-3"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-xl shadow-lg transform -rotate-3"></div>
+              <div className="relative w-full h-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-xl">
+                <span className="text-white font-bold text-lg tracking-tight" style={{ fontFamily: 'monospace' }}>
+                  TS
+                </span>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full shadow-md"></div>
+              </div>
+            </div>
+            <span className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${
+              isScrolled 
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'
+                : 'text-white dark:text-white'
+            }`}>
+              TechSrikanth
+            </span>
           </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {sections.map((section) => (
-            
               <div key={section.id} className="relative">
                 <motion.button
                   onClick={() => handleNavigation(section)}
-                  className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
+                  className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg border-0 outline-none ${
                     activeSection === section.id
-                      ? 'text-white bg-blue-600 dark:bg-blue-500 shadow-lg'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg border-0'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 border-0'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label={`Navigate to ${section.label} section`}
                 >
                   {section.label}
-                  {activeSection === section.id && (
-                    <>
-                    <motion.div
-                      layoutId="activeBackground"
-                      className="absolute inset-0 bg-blue-600 dark:bg-blue-500 rounded-lg -z-10"
-                      initial={false}
-                      transition={{ type: "11", stiffness: 180, damping: 10 }}
-                    />
-                    </>
-                  )}
                 </motion.button>
               </div>
             ))}
@@ -139,16 +154,20 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleDownloadResume}
-              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              aria-label="Download resume PDF"
             >
-              <Download size={16} />
+              <Download size={16} aria-hidden="true" />
               <span>Resume</span>
             </motion.button>
             <motion.button
               onClick={toggleTheme}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+              aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
             >
               <motion.div
                 initial={false}
@@ -166,7 +185,8 @@ const Header: React.FC = () => {
               onClick={toggleTheme}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="p-2 rounded-lg transition-all duration-300 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
             >
               <motion.div
                 initial={false}
@@ -180,7 +200,8 @@ const Header: React.FC = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="p-2 rounded-lg transition-all duration-300 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
               <motion.div
                 initial={false}
@@ -201,9 +222,9 @@ const Header: React.FC = () => {
             opacity: isMenuOpen ? 1 : 0
           }}
           transition={{ duration: 0.3 }}
-          className="md:hidden overflow-hidden"
+          className="md:hidden overflow-hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-lg mt-4"
         >
-          <div className="flex flex-col space-y-4 pt-4 pb-4 border-t border-gray-200 dark:border-gray-700 mt-4">
+          <div className="flex flex-col space-y-2 pt-4 pb-4">
             {sections.map((section, index) => (
               <motion.button
                 key={section.id}
@@ -214,11 +235,12 @@ const Header: React.FC = () => {
                 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => handleNavigation(section)}
-                className={`text-left px-4 py-3 rounded-lg transition-all duration-300 ${
+                className={`text-left px-4 py-3 rounded-lg transition-all duration-300 w-full border-0 outline-none ${
                   activeSection === section.id
-                    ? 'text-white bg-blue-600 dark:bg-blue-500 shadow-lg'
+                    ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg border-0'
                     : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
+                aria-label={`Navigate to ${section.label} section`}
               >
                 {section.label}
               </motion.button>
@@ -233,9 +255,10 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleDownloadResume}
-              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg w-fit"
+              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg w-full"
+              aria-label="Download resume PDF"
             >
-              <Download size={16} />
+              <Download size={16} aria-hidden="true" />
               <span>Download Resume</span>
             </motion.button>
           </div>
