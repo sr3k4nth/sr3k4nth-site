@@ -127,11 +127,7 @@ const Hero: React.FC = () => {
               whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)" }}
               whileTap={{ scale: 0.95 }}
               onClick={handleContactClick}
-              className="flex items-center space-x-3 bg-transparent text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-white transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl"
-              style={{
-                background: 'linear-gradient(white, white) padding-box, linear-gradient(45deg, #3b82f6, #6366f1) border-box',
-                border: '2px solid transparent'
-              }}
+              className="flex items-center space-x-3 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl border-2 border-blue-600 dark:border-blue-400"
               aria-label="Navigate to contact section"
             >
               <Mail size={20} aria-hidden="true" />

@@ -1,60 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github, Calendar, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { projects } from '../data/projects';
 
 const Projects: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [itemsPerView, setItemsPerView] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(projects.length / itemsPerPage);
 
-  // Responsive items per view
-  useEffect(() => {
-    const updateItemsPerView = () => {
-      if (window.innerWidth < 640) {
-        setItemsPerView(1);
-      } else if (window.innerWidth < 1024) {
-        setItemsPerView(2);
-      } else {
-        setItemsPerView(3);
-      }
-    };
-
-    updateItemsPerView();
-    window.addEventListener('resize', updateItemsPerView);
-    return () => window.removeEventListener('resize', updateItemsPerView);
-  }, []);
-
-  // Auto-play infinite carousel
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % projects.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying]);
-
-  const nextProject = () => {
-    setCurrentIndex((prev) => (prev + 1) % projects.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 5000);
+  const getCurrentPageItems = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return projects.slice(startIndex, endIndex);
   };
 
-  const prevProject = () => {
-    setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 5000);
-  };
-
-  const getVisibleProjects = () => {
-    const visibleProjects = [];
-    for (let i = 0; i < itemsPerView; i++) {
-      const index = (currentIndex + i) % projects.length;
-      visibleProjects.push({ ...projects[index], displayIndex: index });
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    // Smooth scroll to projects section
+    const element = document.getElementById('projects');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
-    return visibleProjects;
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
   };
 
   const containerVariants = {
@@ -62,13 +40,13 @@ const Projects: React.FC = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
+        staggerChildren: 0.1
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 }
   };
 
@@ -91,194 +69,67 @@ const Projects: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Infinite Carousel */}
-        <div className="relative max-w-7xl mx-auto mb-8">
-          <div className="overflow-hidden">
-            <motion.div
-              key={currentIndex}
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className={`grid gap-6 ${
-                itemsPerView === 1 ? 'grid-cols-1' : 
-                itemsPerView === 2 ? 'grid-cols-2' : 
-                'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-              }`}
-            >
-              {getVisibleProjects().map((project, index) => (
-                <motion.div
-                  key={`${project.displayIndex}-${index}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-lg">
-                      <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />
-                      {project.date}
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-1">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 text-sm leading-relaxed">
-                      {project.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies.slice(0, 3).map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium flex items-center shadow-sm"
-                        >
-                          <Tag className="w-2 h-2 mr-1" aria-hidden="true" />
-                          {tech}
-                        </span>
-                      ))}
-                      {project.technologies.length > 3 && (
-                        <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
-                          +{project.technologies.length - 3}
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center space-x-4">
-                      <motion.a
-                        whileHover={{ scale: 1.05 }}
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 rounded-lg font-medium text-sm shadow-md"
-                        aria-label={`View ${project.title} source code on GitHub`}
-                      >
-                        <Github className="w-4 h-4" aria-hidden="true" />
-                        <span>Code</span>
-                      </motion.a>
-                      <motion.a
-                        whileHover={{ scale: 1.05 }}
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all duration-300 rounded-lg font-medium text-sm shadow-lg"
-                        aria-label={`View ${project.title} live demo`}
-                      >
-                        <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                        <span>Demo</span>
-                      </motion.a>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Navigation Arrows */}
-          <button
-            onClick={prevProject}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
-            aria-label="Previous projects"
-          >
-            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-          </button>
-          <button
-            onClick={nextProject}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
-            aria-label="Next projects"
-          >
-            <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center space-x-2 mt-6">
-            {projects.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setCurrentIndex(index);
-                  setIsAutoPlaying(false);
-                  setTimeout(() => setIsAutoPlaying(true), 5000);
-                }}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 scale-125'
-                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
-                }`}
-                aria-label={`Go to project ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* All Projects Grid */}
+        {/* Projects Grid */}
         <motion.div
+          key={currentPage}
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          animate="visible"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
         >
-          {projects.map((project, index) => (
+          {getCurrentPageItems().map((project, index) => (
             <motion.div
-              key={index}
+              key={`${currentPage}-${index}`}
               variants={itemVariants}
               whileHover={{ scale: 1.02, y: -5 }}
-              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="relative overflow-hidden">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-36 object-cover hover:scale-105 transition-transform duration-300"
+                  className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
-                <div className="absolute top-2 right-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-md">
+                <div className="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-lg">
                   <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />
                   {project.date}
                 </div>
               </div>
               
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-1">
                   {project.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2 text-sm">
+                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 text-sm leading-relaxed">
                   {project.description}
                 </p>
                 
-                <div className="flex flex-wrap gap-1 mb-3">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {project.technologies.slice(0, 3).map((tech) => (
                     <span
                       key={tech}
-                      className="px-2 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium"
+                      className="px-3 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium flex items-center shadow-sm"
                     >
+                      <Tag className="w-2 h-2 mr-1" aria-hidden="true" />
                       {tech}
                     </span>
                   ))}
                   {project.technologies.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs font-medium">
                       +{project.technologies.length - 3}
                     </span>
                   )}
                 </div>
                 
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <motion.a
                     whileHover={{ scale: 1.05 }}
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm"
-                    aria-label={`View ${project.title} source code`}
+                    className="flex items-center space-x-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 rounded-lg font-medium text-sm shadow-md"
+                    aria-label={`View ${project.title} source code on GitHub`}
                   >
                     <Github className="w-4 h-4" aria-hidden="true" />
                     <span>Code</span>
@@ -288,7 +139,7 @@ const Projects: React.FC = () => {
                     href={project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-sm"
+                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all duration-300 rounded-lg font-medium text-sm shadow-lg"
                     aria-label={`View ${project.title} live demo`}
                   >
                     <ExternalLink className="w-4 h-4" aria-hidden="true" />
@@ -299,6 +150,66 @@ const Projects: React.FC = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center space-x-2">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={prevPage}
+              disabled={currentPage === 1}
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                currentPage === 1
+                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg'
+              }`}
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </motion.button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <motion.button
+                key={page}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => goToPage(page)}
+                className={`px-4 py-2 rounded-lg transition-all duration-300 font-medium ${
+                  currentPage === page
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg'
+                }`}
+                aria-label={`Go to page ${page}`}
+                aria-current={currentPage === page ? 'page' : undefined}
+              >
+                {page}
+              </motion.button>
+            ))}
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                currentPage === totalPages
+                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg'
+              }`}
+              aria-label="Next page"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </motion.button>
+          </div>
+        )}
+
+        {/* Page Info */}
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, projects.length)} of {projects.length} projects
+          </p>
+        </div>
       </div>
     </section>
   );

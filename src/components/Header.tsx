@@ -101,9 +101,7 @@ const Header: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg' 
-          : 'bg-transparent'
+        'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg'
       }`}
     >
       <nav className="container mx-auto px-4 sm:px-6 py-4">
@@ -139,12 +137,10 @@ const Header: React.FC = () => {
               <div key={section.id} className="relative">
                 <motion.button
                   onClick={() => handleNavigation(section)}
-                  className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
+                  className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg border-0 outline-none ${
                     activeSection === section.id
-                      ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg'
-                      : isScrolled
-                        ? 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                        : 'text-white/90 hover:text-white hover:bg-white/10'
+                      ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg border-0'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 border-0'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -169,9 +165,7 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className={`p-2 rounded-lg transition-all duration-300 ${
-                isScrolled
-                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  : 'bg-white/10 text-white hover:bg-white/20'
+                'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
             >
@@ -191,11 +185,7 @@ const Header: React.FC = () => {
               onClick={toggleTheme}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className={`p-2 rounded-lg transition-all duration-300 ${
-                isScrolled
-                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                  : 'bg-white/10 text-white'
-              }`}
+              className="p-2 rounded-lg transition-all duration-300 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
             >
               <motion.div
@@ -210,11 +200,7 @@ const Header: React.FC = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className={`p-2 rounded-lg transition-all duration-300 ${
-                isScrolled
-                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                  : 'bg-white/10 text-white'
-              }`}
+              className="p-2 rounded-lg transition-all duration-300 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
               <motion.div
@@ -249,9 +235,9 @@ const Header: React.FC = () => {
                 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => handleNavigation(section)}
-                className={`text-left px-4 py-3 rounded-lg transition-all duration-300 w-full ${
+                className={`text-left px-4 py-3 rounded-lg transition-all duration-300 w-full border-0 outline-none ${
                   activeSection === section.id
-                    ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg'
+                    ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg border-0'
                     : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
                 aria-label={`Navigate to ${section.label} section`}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, Tag, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -6,46 +6,46 @@ import { blogPosts, blogCategories } from '../data/blogPosts';
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [itemsPerView, setItemsPerView] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   const navigate = useNavigate();
 
   const filteredPosts = selectedCategory === 'All' 
     ? blogPosts 
     : blogPosts.filter(post => post.category === selectedCategory);
 
-  // Responsive items per view
-  useEffect(() => {
-    const updateItemsPerView = () => {
-      if (window.innerWidth < 640) {
-        setItemsPerView(1);
-      } else if (window.innerWidth < 1024) {
-        setItemsPerView(2);
-      } else {
-        setItemsPerView(3);
-      }
-    };
+  const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
 
-    updateItemsPerView();
-    window.addEventListener('resize', updateItemsPerView);
-    return () => window.removeEventListener('resize', updateItemsPerView);
-  }, []);
+  const getCurrentPageItems = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredPosts.slice(startIndex, endIndex);
+  };
 
-  // Auto-play infinite carousel
-  useEffect(() => {
-    if (!isAutoPlaying || filteredPosts.length <= itemsPerView) return;
-    
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % filteredPosts.length);
-    }, 3000);
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    // Smooth scroll to blog section
+    const element = document.getElementById('blog');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, filteredPosts.length, itemsPerView]);
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
 
-  // Reset current index when category changes
-  useEffect(() => {
-    setCurrentIndex(0);
+  const prevPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  // Reset to page 1 when category changes
+  React.useEffect(() => {
+    setCurrentPage(1);
   }, [selectedCategory]);
 
   const handlePostClick = (slug: string) => {
@@ -53,29 +53,6 @@ const Blog: React.FC = () => {
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
-  };
-
-  const nextPost = () => {
-    setCurrentIndex((prev) => (prev + 1) % filteredPosts.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 5000);
-  };
-
-  const prevPost = () => {
-    setCurrentIndex((prev) => (prev - 1 + filteredPosts.length) % filteredPosts.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 5000);
-  };
-
-  const getVisiblePosts = () => {
-    if (filteredPosts.length <= itemsPerView) return filteredPosts;
-    
-    const visiblePosts = [];
-    for (let i = 0; i < itemsPerView; i++) {
-      const index = (currentIndex + i) % filteredPosts.length;
-      visiblePosts.push({ ...filteredPosts[index], displayIndex: index });
-    }
-    return visiblePosts;
   };
 
   const containerVariants = {
@@ -152,126 +129,17 @@ const Blog: React.FC = () => {
 
         {filteredPosts.length > 0 ? (
           <>
-            {/* Infinite Carousel */}
-            {filteredPosts.length > itemsPerView && (
-              <div className="relative max-w-7xl mx-auto mb-8">
-                <div className="overflow-hidden">
-                  <motion.div
-                    key={`${selectedCategory}-${currentIndex}`}
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className={`grid gap-6 ${
-                      itemsPerView === 1 ? 'grid-cols-1' : 
-                      itemsPerView === 2 ? 'grid-cols-2' : 
-                      'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-                    }`}
-                  >
-                    {getVisiblePosts().map((post, index) => (
-                      <motion.article
-                        key={`${selectedCategory}-${post.displayIndex || index}-${index}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                        className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
-                        onClick={() => handlePostClick(post.slug)}
-                        whileHover={{ scale: 1.02, y: -5 }}
-                      >
-                        <div className="relative overflow-hidden">
-                          <img
-                            src={post.image}
-                            alt={post.title}
-                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                          />
-                          <div className="absolute top-3 left-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 flex items-center shadow-lg">
-                            <Tag className="w-3 h-3 mr-1" aria-hidden="true" />
-                            {post.category}
-                          </div>
-                        </div>
-                        
-                        <div className="p-6">
-                          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <div className="flex items-center">
-                              <Calendar className="w-3 h-3 mr-1" aria-hidden="true" />
-                              {post.date}
-                            </div>
-                            <div className="flex items-center">
-                              <Clock className="w-3 h-3 mr-1" aria-hidden="true" />
-                              {post.readTime}
-                            </div>
-                          </div>
-                          
-                          <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-3 group-hover:from-blue-600 group-hover:to-indigo-600 dark:group-hover:from-blue-400 dark:group-hover:to-indigo-400 transition-all duration-300 line-clamp-2">
-                            {post.title}
-                          </h3>
-                          
-                          <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed line-clamp-3">
-                            {post.excerpt}
-                          </p>
-                          
-                          <motion.div
-                            whileHover={{ x: 5 }}
-                            className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium text-sm"
-                          >
-                            <span className="mr-2">Read more</span>
-                            <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                          </motion.div>
-                        </div>
-                      </motion.article>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* Navigation Arrows */}
-                <button
-                  onClick={prevPost}
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
-                  aria-label="Previous blog posts"
-                >
-                  <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                </button>
-                <button
-                  onClick={nextPost}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 group"
-                  aria-label="Next blog posts"
-                >
-                  <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                </button>
-
-                {/* Dots Indicator */}
-                <div className="flex justify-center space-x-2 mt-6">
-                  {filteredPosts.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setCurrentIndex(index);
-                        setIsAutoPlaying(false);
-                        setTimeout(() => setIsAutoPlaying(true), 5000);
-                      }}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        index === currentIndex
-                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 scale-125'
-                          : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
-                      }`}
-                      aria-label={`Go to blog post ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* All Posts Grid */}
+            {/* Blog Posts Grid */}
             <motion.div
-              key={selectedCategory}
+              key={`${selectedCategory}-${currentPage}`}
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
             >
-              {filteredPosts.map((post, index) => (
+              {getCurrentPageItems().map((post, index) => (
                 <motion.article
-                  key={`${selectedCategory}-${post.slug}`}
+                  key={`${selectedCategory}-${post.slug}-${currentPage}`}
                   variants={itemVariants}
                   whileHover={{ scale: 1.02, y: -5 }}
                   transition={{ duration: 0.3 }}
@@ -321,6 +189,67 @@ const Blog: React.FC = () => {
                 </motion.article>
               ))}
             </motion.div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center space-x-2">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={prevPage}
+                  disabled={currentPage === 1}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    currentPage === 1
+                      ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg'
+                  }`}
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </motion.button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <motion.button
+                    key={page}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => goToPage(page)}
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 font-medium ${
+                      currentPage === page
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg'
+                    }`}
+                    aria-label={`Go to page ${page}`}
+                    aria-current={currentPage === page ? 'page' : undefined}
+                  >
+                    {page}
+                  </motion.button>
+                ))}
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    currentPage === totalPages
+                      ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md hover:shadow-lg'
+                  }`}
+                  aria-label="Next page"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </motion.button>
+              </div>
+            )}
+
+            {/* Page Info */}
+            <div className="text-center mt-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredPosts.length)} of {filteredPosts.length} posts
+                {selectedCategory !== 'All' && ` in "${selectedCategory}"`}
+              </p>
+            </div>
           </>
         ) : (
           <motion.div
@@ -333,18 +262,6 @@ const Blog: React.FC = () => {
             </p>
           </motion.div>
         )}
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center mt-6"
-        >
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            Showing {filteredPosts.length} of {blogPosts.length} posts
-            {selectedCategory !== 'All' && ` in "${selectedCategory}"`}
-          </p>
-        </motion.div>
       </div>
     </section>
   );
