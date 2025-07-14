@@ -104,7 +104,7 @@ const Header: React.FC = () => {
         'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg'
       }`}
     >
-      <nav className="container mx-auto px-4 sm:px-6 py-4">
+      <nav className="container mx-auto px-4 sm:px-6 py-3">
         <div className="flex items-center justify-between">
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -127,7 +127,7 @@ const Header: React.FC = () => {
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'
                 : 'text-white dark:text-white'
             }`}>
-              TechSrikanth
+              {/* Portfolio */}
             </span>
           </motion.div>
 

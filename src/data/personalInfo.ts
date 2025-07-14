@@ -1,11 +1,11 @@
 export const personalInfo = {
-  name: "Sxrikanth",
-  title: "Full Stack Developer",
+  name: "Srikanth",
+  title: "Full Stack Expert",
   experience: "9+",
   description: "Passionate full-stack engineer with 9+ years of experience building scalable, high-performance web applications that serve millions of users.",
   location: "Bengaluru, India",
-  email: "xx.tnrs@gmail.com",
-  phone: "+91 8933444120567",
+  email: "srikanth.tnrs@gmail.com",
+  phone: "+91 xxxxxxxxx67",
   social: {
     github: "https://github.com",
     linkedin: "https://linkedin.com",

@@ -59,13 +59,15 @@ const Hero: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="mb-6 md:mb-8"
             >
-              <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-1 shadow-2xl dark:shadow-blue-500/25">
+
+            <div className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-1 shadow-2xl dark:shadow-blue-500/25">
                 <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-gray-800">
                   <img
-                    src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop&crop=face"
+                      src="https://mattfarley.ca/img/mf-avatar.svg"
                     alt="Professional developer avatar"
                     className="w-full h-full object-cover"
                     loading="eager"
+                    title="sr3k4nth"
                   />
                 </div>
               </div>
@@ -74,14 +76,14 @@ const Hero: React.FC = () => {
             <div className="text-3xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 min-h-[1.2em]">
               <TypeAnimation
                 sequence={[
-                  `I'm ${personalInfo.name}`,
-                  2000,
+                  `Hello 👋, I'm ${personalInfo.name}`,
+                  200000,
                   `I'm ${personalInfo.title}`,
-                  2000,
-                  'I build amazing web apps',
-                  2000,
-                  'I create digital experiences',
-                  2000,
+                  3000,
+                  // 'I build amazing web apps',
+                  // 2000,
+                  // 'I create digital experiences',
+                  // 2000,
                 ]}
                 wrapper="span"
                 speed={50}
@@ -100,9 +102,9 @@ const Hero: React.FC = () => {
               <p className="text-base sm:text-lg md:text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent font-semibold mb-4">
                 Full-Stack Expert | AI Engineer | Distributed Systems
               </p>
-              <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-2">
+              {/* <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-2">
                 {personalInfo.experience} years of experience building scalable, high-performance web applications that serve millions of users
-              </p>
+              </p> */}
             </motion.div>
           </motion.div>
 
@@ -182,10 +184,11 @@ const Hero: React.FC = () => {
         >
           <motion.button
             onClick={scrollToAbout}
+            title={'Learn more'}
             className="flex flex-col items-center space-y-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             aria-label="Scroll to about section"
           >
-            <span className="text-sm font-medium">Learn More</span>
+        {/* <span className="pt-[42px] text-sm font-medium">Learn More</span> */}
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}

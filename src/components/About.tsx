@@ -41,9 +41,9 @@ const About: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent mb-6">
             About Me
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
+          {/* <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
             {personalInfo.description}
-          </p>
+          </p> */}
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-16">
@@ -80,7 +80,7 @@ const About: React.FC = () => {
             ⚡  I build apps that work—fast, reliable, and scalable
             </h3> */}
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300">
-            Hi, I'm <b>Srikanth1 👋 </b>— a passionate <b>Senior Software Engineer</b> with <b>9 years of experience</b> crafting scalable, high-performance 🚀, and user-focused web applications.🧠💻
+             Passionate <b>Senior Software Engineer</b> with <b>9 years of experience</b> crafting scalable, high-performance 🚀, and user-focused web applications.🧠💻
             </p>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300">
             My core expertise lies in the JavaScript ecosystem, especially React.js, Node.js, and modern web architectures. I’ve worked across dynamic industries like Fintech, E-Commerce, and Healthcare, delivering robust solutions that balance performance, usability, and maintainability.
