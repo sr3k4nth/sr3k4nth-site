@@ -7,8 +7,8 @@ export const personalInfo = {
   email: "srikanth.tnrs@gmail.com",
   phone: "+91 xxxxxxxxx67",
   social: {
-    github: "https://github.com",
-    linkedin: "https://linkedin.com",
+    github: "https://github.com/sr3k4nth",
+    linkedin: "https://www.linkedin.com/in/sr3k4nth/",
     twitter: "https://twitter.com"
   },
   skills: [

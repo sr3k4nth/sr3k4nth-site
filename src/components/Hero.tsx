@@ -10,15 +10,17 @@ const Hero: React.FC = () => {
 
   const handleDownloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/resume.pdf';
-    link.download = 'Resume.pdf';
+    link.href = 'https://drive.google.com/file/d/1i-I98bSXFdsATvwmS0_-GTTFutpujcOG/view?usp=sharing';
+    link.download = 'Srikanth_9YRS_SSE.pdf';
+    link.target="_blank"
+    link.rel="noreferrer noopener"
     link.click();
   };
 
   const handleContactClick = () => {
     const element = document.getElementById('contact');
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth' });b
     } else {
       navigate('/contact');
     }
@@ -100,7 +102,7 @@ const Hero: React.FC = () => {
               className="mb-6"
             >
               <p className="text-base sm:text-lg md:text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent font-semibold mb-4">
-                Full-Stack Expert | AI Engineer | Distributed Systems
+                Full-Stack Expert | AI Engineer
               </p>
               {/* <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-2">
                 {personalInfo.experience} years of experience building scalable, high-performance web applications that serve millions of users

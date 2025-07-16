@@ -88,10 +88,22 @@ const Header: React.FC = () => {
     }
   };
 
+  // https://drive.google.com/file/d/1i-I98bSXFdsATvwmS0_-GTTFutpujcOG/view?usp=sharing
+
+  // const handleDownloadResume = () => {
+  //   const link = document.createElement('a');
+  //   link.href = '/resume.pdf';
+  //   link.download = 'Resume.pdf';
+  //   link.click();
+  // };
+
   const handleDownloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/resume.pdf';
-    link.download = 'Resume.pdf';
+    link.href = 'https://drive.google.com/file/d/1i-I98bSXFdsATvwmS0_-GTTFutpujcOG/view?usp=sharing';
+    link.download = 'Srikanth_9YRS_SSE.pdf';
+    link.target="_blank"
+    link.rel="noreferrer noopener"
+
     link.click();
   };
 
